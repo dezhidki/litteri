@@ -4,7 +4,7 @@ A poor man's WEBVTT editor, aimed primarily at editing transliterations generate
 
 To start, install npm/pnpm, clone, `npm i` and `npm run dev`.
 
-TODO: Host on Vercel as a webapp.
+You can also use web version (all your videos/audios and subtitles are stored locally, not on a server): https://litteri.deni.sh
 
 ## Quick use
 
