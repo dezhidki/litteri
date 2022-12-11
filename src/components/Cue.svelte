@@ -36,9 +36,15 @@
 	}
 
 	function onActiveCue() {
+		const isAlreadyActive = isActive($mediaTime);
 		mediaTime.set(Math.floor(cue.start / 1000));
 		if (textArea) {
 			textArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			if (!isAlreadyActive) {
+				// move cursor to start, remove selection
+				textArea.selectionStart = 0;
+				textArea.selectionEnd = 0;
+			}
 		}
 	}
 
