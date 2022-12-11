@@ -17,7 +17,7 @@
 	}
 
 	function isActive(curTime: number) {
-		return curTime * 1000 >= cue.start && curTime * 1000 < cue.end;
+		return curTime >= Math.floor(cue.start / 1000) && curTime < Math.floor(cue.end / 1000);
 	}
 
 	let textArea: HTMLTextAreaElement | undefined;
