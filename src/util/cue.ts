@@ -38,9 +38,41 @@ export function mergeCues(cues: CueItem[]) {
     return mergedCues;
 }
 
-export function loadJson(jsonString: string) {
-    const cues: CueItem[] = JSON.parse(jsonString);
-    return cues;
+export function loadJson(jsonString: string): CueItem[] {
+    const jsonData = JSON.parse(jsonString);
+    if (jsonData.language) {
+        // New format generated from transcripting script
+        const segmentedData: {
+            language: string;
+            segments: {
+                start: number;
+                end: number;
+                text: string;
+                speakers: {
+                    speaker: string,
+                    talk_fraction: number
+                }[];
+            }[];
+        } = jsonData;
+
+        const cues: CueItem[] = [];
+        for (const segment of segmentedData.segments) {
+            const cue: CueItem = {
+                start: segment.start * 1000,
+                end: segment.end * 1000,
+                text: segment.text
+            };
+
+            if (segment.speakers.length > 0) {
+                cue.speaker = (+segment.speakers[0].speaker) + 1;
+            }
+
+            cues.push(cue);
+        }
+
+        return cues;
+    }
+    return jsonData;
 }
 
 export async function saveToJsonFile(cues: CueItem[], fileHandle: FileSystemFileHandle) {
@@ -62,7 +94,7 @@ export async function saveAsInterviewText(cues: CueItem[], actorNames: string[],
 
         if (cue.speaker && cue.speaker != currentSpeaker) {
             currentSpeaker = cue.speaker;
-            text += `\n\n${actorNames[currentSpeaker-1]}: `;
+            text += `\n\n${actorNames[currentSpeaker - 1]}: `;
         }
 
         text += cue.text + " ";
