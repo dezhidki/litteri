@@ -63,6 +63,17 @@
 			e.preventDefault();
 		}
 
+		// Ctrl + Number = Do the sme as above
+		if (e.ctrlKey && e.code.startsWith('Digit') && e.code.length === 6) {
+			const num = parseInt(e.code[5]);
+			if (num == 0) {
+				cue.speaker = undefined;
+			} else {
+				cue.speaker = num;
+			}
+			e.preventDefault();
+		}
+
 		// Numpad - = Mark this cue as misc
 		if (e.code === 'NumpadSubtract') {
 			cue.misc = !cue.misc;
