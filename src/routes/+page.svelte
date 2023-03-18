@@ -17,6 +17,8 @@
 	let allCues: CueItem[] = [];
 	let mediaPaused = true;
 	let cueElements: Record<number, Cue> = {};
+	let videoElement: HTMLVideoElement | null = null;
+	let playbackSpeed = 1;
 
 	let actorNames: string[] = Array.from({ length: 9 }, (_) => '');
 
@@ -112,6 +114,17 @@
 			e.preventDefault();
 			saveAsJson();
 		}
+
+		// Alt + Number = Set x speed
+		if (e.altKey && !e.shiftKey && e.code.startsWith('Digit')) {
+			const speed = parseInt(e.code.replace('Digit', ''));
+			// Scale between 1 and 2
+			const scaledSpeed = speed / 10 + 1;
+			if (videoElement) {
+				videoElement.playbackRate = scaledSpeed;
+				playbackSpeed = scaledSpeed;
+			}
+		}
 	}
 </script>
 
@@ -146,6 +159,7 @@
 		<button class="bg-slate-300 p-1 rounded-sm hover:bg-slate-400" on:click={exportAsInterview}
 			>Export interview</button
 		>
+		<span>Speed: x{playbackSpeed}</span>
 	</div>
 	<div class="names">
 		{#each actorNames as name, i}
@@ -162,7 +176,13 @@
 		{/each}
 	</div>
 	<div class="video">
-		<video src={videoUrl} controls bind:currentTime={$mediaTime} bind:paused={mediaPaused}>
+		<video
+			src={videoUrl}
+			controls
+			bind:currentTime={$mediaTime}
+			bind:paused={mediaPaused}
+			bind:this={videoElement}
+		>
 			<track kind="captions" />
 		</video>
 	</div>
