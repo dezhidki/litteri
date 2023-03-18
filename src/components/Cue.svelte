@@ -75,7 +75,7 @@
 		}
 
 		// Numpad - = Mark this cue as misc
-		if (e.code === 'NumpadSubtract') {
+		if (e.code === 'NumpadSubtract' || (e.ctrlKey && e.code == 'Minus')) {
 			cue.misc = !cue.misc;
 			e.preventDefault();
 		}
